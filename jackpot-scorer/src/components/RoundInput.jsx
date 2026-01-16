@@ -62,13 +62,20 @@ export default function RoundInput() {
     const [isLongPress, setIsLongPress] = useState(false);
 
     const start = (e) => {
-      // Prevent context menu or other defaults if needed, 
-      // but be careful with preventDefault on touchstart as it might block scrolling
+      // Prevent context menu on touch devices
+      if (e.type === 'touchstart') {
+        // We don't preventDefault here anymore to allow clicking the clear button,
+        // but we need to be careful with the long press logic.
+      }
       e.persist();
       setIsLongPress(false);
       const timeout = setTimeout(() => {
         setIsLongPress(true);
         onLongPress(e);
+        // Provide haptic feedback if available
+        if (window.navigator && window.navigator.vibrate) {
+          window.navigator.vibrate(50);
+        }
       }, delay);
       setTimer(timeout);
     };
@@ -79,15 +86,18 @@ export default function RoundInput() {
         setTimer(null);
       }
       
-      // Only trigger click if we weren't in a long press 
-      // AND if the event wasn't a mouseleave (which usually means the user aborted)
-      if (!isLongPress && onClick && e.type !== 'mouseleave' && e.type !== 'touchcancel') {
-        onClick(e);
+      // If it was a long press, we've already triggered onLongPress
+      // If it wasn't, and it's a valid click/tap, trigger onClick
+      if (!isLongPress) {
+        // Prevent triggering click if the user dragged away
+        const isAbort = e.type === 'mouseleave' || e.type === 'touchcancel';
+        if (!isAbort && onClick) {
+          onClick(e);
+        }
       }
       
-      // Delay resetting isLongPress slightly to ensure any bubbling events 
-      // see the correct state, or just reset it immediately if not needed elsewhere.
-      setIsLongPress(false);
+      // Use a small timeout to reset isLongPress to prevent ghost clicks
+      setTimeout(() => setIsLongPress(false), 10);
     };
 
     return {
