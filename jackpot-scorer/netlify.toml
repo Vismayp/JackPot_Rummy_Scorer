@@ -1,0 +1,4 @@
+[build]
+  base = "jackpot-scorer"
+  publish = "dist"
+  command = "npm run build"
