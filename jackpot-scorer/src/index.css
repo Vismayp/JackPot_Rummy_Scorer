@@ -1,0 +1,160 @@
+/* Terminal/CLI Theme - Jackpot Scorer */
+:root {
+  /* Default Dark Colors */
+  --bg: #0a0a0a;
+  --bg-light: #141414;
+  --text: #f0f0f0;
+  --text-dim: #666666;
+  --accent: #39ff14;
+  --border: #333333;
+  --danger: #ff4444;
+  --warning: #ffa500;
+  --info: #4dabf7;
+  
+  /* Typography */
+  font-family: 'Fira Code', 'SF Mono', 'Cascadia Code', 'Consolas', 'Monaco', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 400;
+  
+  /* Rendering */
+  color-scheme: dark;
+  color: var(--text);
+  background-color: var(--bg);
+  
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root[data-theme='light'] {
+  --bg: #ffffff;
+  --bg-light: #f5f5f5;
+  --text: #000000;
+  --text-dim: #333333;
+  --accent: #008000;
+  --border: #cccccc;
+  --danger: #cc0000;
+  --warning: #e67e22;
+  --info: #2980b9;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body {
+  display: block;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Global Typography */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: normal;
+}
+
+/* Links */
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Buttons Reset */
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Input Reset */
+input {
+  font-family: inherit;
+}
+
+input:focus {
+  outline: none;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-dim);
+}
+
+/* Selection */
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* Common utility classes */
+.prompt {
+  color: var(--accent);
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.section-label {
+  color: var(--accent);
+  font-size: 0.9rem;
+}
+
+.blink {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Touch optimizations */
+@media (hover: none) and (pointer: coarse) {
+  button, input {
+    min-height: 44px;
+  }
+}
+
+/* Disable text selection on interactive elements */
+button {
+  -webkit-user-select: none;
+  user-select: none;
+}

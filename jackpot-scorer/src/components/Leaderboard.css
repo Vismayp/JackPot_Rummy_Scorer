@@ -1,0 +1,172 @@
+.leaderboard {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.leaderboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.section-label {
+  color: var(--accent);
+  font-size: 0.9rem;
+}
+
+.round-label {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+  position: relative;
+}
+
+.leaderboard-item.status-eliminated {
+  opacity: 0.5;
+  background: var(--bg);
+}
+
+.leaderboard-item.status-warning {
+  border-color: var(--warning);
+}
+
+.leaderboard-item.status-reentered {
+  border-color: var(--info);
+}
+
+.player-rank {
+  width: 2.5rem;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+.player-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.player-name-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.player-name {
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reentry-icon {
+  color: var(--info);
+}
+
+.player-status {
+  font-size: 0.7rem;
+  padding: 0.1rem 0.3rem;
+  border: 1px solid currentColor;
+}
+
+.player-status.status-active {
+  color: var(--accent);
+}
+
+.player-status.status-eliminated {
+  color: var(--danger);
+}
+
+.player-status.status-warning {
+  color: var(--warning);
+}
+
+.player-status.status-reentered {
+  color: var(--info);
+}
+
+.player-stats {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.warning-indicator {
+  color: var(--warning);
+  font-weight: bold;
+}
+
+.warning-bar {
+  height: 3px;
+  background: var(--bg);
+  margin-top: 0.5rem;
+  overflow: hidden;
+}
+
+.warning-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--warning), var(--danger));
+  transition: width 0.3s;
+}
+
+.player-total {
+  font-size: 1.2rem;
+  font-weight: bold;
+  min-width: 3rem;
+  text-align: right;
+  color: var(--accent);
+}
+
+.reentry-btn {
+  position: absolute;
+  right: 0.75rem;
+  background: transparent;
+  border: 1px solid var(--info);
+  color: var(--info);
+  padding: 0.25rem 0.5rem;
+  font-family: inherit;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reentry-btn:hover {
+  background: var(--info);
+  color: var(--bg);
+}
+
+.game-over {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 2px solid var(--accent);
+  text-align: center;
+}
+
+.game-over .accent {
+  display: block;
+  color: var(--accent);
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.game-over .winner {
+  color: var(--text);
+}

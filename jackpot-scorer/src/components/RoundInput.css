@@ -1,0 +1,285 @@
+.round-input {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.round-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.hint {
+  color: var(--text-dim);
+  font-size: 0.75rem;
+}
+
+.score-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.score-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+
+.score-row.winner {
+  border-color: var(--accent);
+  background: rgba(57, 255, 20, 0.05);
+}
+
+.score-row.dropped {
+  border-color: var(--warning);
+  background: rgba(255, 165, 0, 0.05);
+}
+
+.score-player {
+  flex: 1;
+  min-width: 0;
+}
+
+.score-player .player-name {
+  display: block;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.score-player .player-current {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}
+
+.score-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.score-input {
+  width: 4rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  text-align: center;
+  outline: none;
+}
+
+.score-input:focus {
+  border-color: var(--accent);
+}
+
+.score-input.winner-input {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.score-input::placeholder {
+  color: var(--text-dim);
+}
+
+/* Hide number input arrows */
+.score-input::-webkit-outer-spin-button,
+.score-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.score-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.drop-btn {
+  background: transparent;
+  border: 1px solid var(--warning);
+  color: var(--warning);
+  padding: 0.5rem 0.75rem;
+  font-family: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.drop-btn:hover {
+  background: var(--warning);
+  color: var(--bg);
+}
+
+.drop-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.drop-value {
+  color: var(--warning);
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.clear-drop-btn {
+  background: transparent;
+  border: none;
+  color: var(--danger);
+  font-family: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.winner-badge {
+  color: var(--accent);
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.errors {
+  margin: 1rem 0;
+  padding: 0.75rem;
+  background: rgba(255, 68, 68, 0.1);
+  border: 1px solid var(--danger);
+}
+
+.error-line {
+  color: var(--danger);
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+
+.error-line:last-child {
+  margin-bottom: 0;
+}
+
+.submit-btn {
+  width: 100%;
+  background: var(--accent);
+  border: none;
+  color: var(--bg);
+  padding: 1rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: opacity 0.2s;
+}
+
+.submit-btn:hover {
+  opacity: 0.9;
+}
+
+.submit-btn .prompt {
+  color: var(--bg);
+}
+
+.no-players {
+  text-align: center;
+  padding: 2rem;
+}
+
+.no-players .accent {
+  display: block;
+  color: var(--accent);
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Confirm Modal */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 100;
+}
+
+.confirm-modal {
+  background: var(--bg);
+  border: 2px solid var(--accent);
+  padding: 1.5rem;
+  max-width: 100%;
+  width: 320px;
+}
+
+.confirm-title {
+  color: var(--accent);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.confirm-scores {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.confirm-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+}
+
+.confirm-value {
+  font-weight: bold;
+  color: var(--accent);
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.cancel-btn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.75rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.confirm-btn {
+  flex: 1;
+  background: var(--accent);
+  border: none;
+  color: var(--bg);
+  padding: 0.75rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.confirm-btn:hover {
+  opacity: 0.9;
+}

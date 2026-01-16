@@ -1,0 +1,124 @@
+.history-table {
+  padding: 1rem;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.round-count {
+  color: var(--text-dim);
+  font-size: 0.75rem;
+}
+
+.no-history {
+  color: var(--text-dim);
+  padding: 1rem 0;
+}
+
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.history {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  min-width: max-content;
+}
+
+.history th,
+.history td {
+  padding: 0.5rem;
+  text-align: center;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.history th {
+  background: var(--bg-light);
+  color: var(--text-dim);
+  font-weight: normal;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.round-col {
+  width: 2.5rem;
+  min-width: 2.5rem;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--bg-light) !important;
+}
+
+.round-num {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  position: sticky;
+  left: 0;
+  background: var(--bg);
+}
+
+.player-col {
+  min-width: 4rem;
+}
+
+.player-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.reentry-mark {
+  color: var(--info);
+  font-size: 0.7rem;
+}
+
+.score-cell {
+  color: var(--text);
+}
+
+.score-cell.winner {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.score-cell.drop {
+  color: var(--warning);
+}
+
+.score-cell.inactive {
+  color: var(--text-dim);
+}
+
+.score-cell.eliminated {
+  background: rgba(255, 68, 68, 0.1);
+  color: var(--danger);
+  opacity: 0.6;
+}
+
+.total-row {
+  background: var(--bg-light);
+  position: sticky;
+  bottom: 0;
+}
+
+.total-label {
+  color: var(--accent);
+  font-weight: bold;
+  position: sticky;
+  left: 0;
+  background: var(--bg-light);
+}
+
+.total-cell {
+  color: var(--accent);
+  font-weight: bold;
+}

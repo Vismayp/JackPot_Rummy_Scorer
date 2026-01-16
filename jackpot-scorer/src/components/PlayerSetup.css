@@ -1,0 +1,209 @@
+.player-setup {
+  padding: 1rem;
+  max-width: 100%;
+}
+
+.terminal-header {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  color: var(--accent);
+}
+
+.setup-section {
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  color: var(--accent);
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.add-player-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.terminal-input {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.75rem;
+  font-family: inherit;
+  font-size: 1rem;
+  outline: none;
+}
+
+.terminal-input:focus {
+  border-color: var(--accent);
+}
+
+.terminal-input::placeholder {
+  color: var(--text-dim);
+}
+
+.terminal-btn {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 0.75rem 1rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.terminal-btn:hover,
+.terminal-btn:focus {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.error-msg {
+  color: var(--danger);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.player-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.player-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+}
+
+.player-index {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.player-name {
+  flex: 1;
+  color: var(--text);
+}
+
+.remove-btn {
+  background: transparent;
+  border: none;
+  color: var(--danger);
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  transition: opacity 0.2s;
+}
+
+.remove-btn:hover {
+  opacity: 0.7;
+}
+
+.empty-state {
+  color: var(--text-dim);
+  padding: 1rem 0;
+}
+
+.blink {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.start-btn {
+  width: 100%;
+  background: var(--accent);
+  border: none;
+  color: var(--bg);
+  padding: 1rem;
+  font-family: inherit;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  font-weight: bold;
+}
+
+.start-btn:hover {
+  opacity: 0.9;
+}
+
+.start-btn .prompt {
+  color: var(--bg);
+}
+
+.history-section {
+  margin-top: 2.5rem;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.history-item:hover {
+  border-color: var(--accent);
+  background: rgba(57, 255, 20, 0.05);
+}
+
+:root[data-theme='light'] .history-item:hover {
+  background: rgba(0, 128, 0, 0.05);
+}
+
+.history-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.history-players {
+  font-weight: bold;
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+}
+
+.history-meta {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.history-delete {
+  background: transparent;
+  border: none;
+  color: var(--danger);
+  font-family: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  opacity: 0.6;
+}
+
+.history-delete:hover {
+  opacity: 1;
+}
