@@ -40,31 +40,86 @@ export default function RoundInput() {
     setErrors([]);
   };
 
-  const handleDrop = (playerId) => {
+  const handleDrop = (playerId, isSecond = false) => {
     const player = state.players.find(p => p.id === playerId);
     if (!player) return;
     
-    // Get the correct penalty based on player's current drop count
-    const penalty = getDropPenalty(player.dropCount);
-    // Determine drop level: if dropCount is 0, it's first drop (level 1), otherwise second drop (level 2)
-    const dropLevel = player.dropCount === 0 ? 1 : 2;
+    const penalty = isSecond ? 40 : 25;
     
     setScores(prev => ({
       ...prev,
       [playerId]: { 
         score: penalty, 
         isDrop: true, 
-        dropLevel: dropLevel
+        dropLevel: isSecond ? 2 : 1
       }
     }));
     setErrors([]);
   };
 
+  const useLongPress = (onLongPress, onClick, { delay = 500 } = {}) => {
+    const [timer, setTimer] = useState(null);
+    const [isLongPress, setIsLongPress] = useState(false);
+
+    const start = (e) => {
+      // Prevent context menu on touch devices
+      if (e.type === 'touchstart') {
+        // We don't preventDefault here anymore to allow clicking the clear button,
+        // but we need to be careful with the long press logic.
+      }
+      e.persist();
+      setIsLongPress(false);
+      const timeout = setTimeout(() => {
+        setIsLongPress(true);
+        onLongPress(e);
+        // Provide haptic feedback if available
+        if (window.navigator && window.navigator.vibrate) {
+          window.navigator.vibrate(50);
+        }
+      }, delay);
+      setTimer(timeout);
+    };
+
+    const stop = (e) => {
+      if (timer) {
+        clearTimeout(timer);
+        setTimer(null);
+      }
+      
+      // If it was a long press, we've already triggered onLongPress
+      // If it wasn't, and it's a valid click/tap, trigger onClick
+      if (!isLongPress) {
+        // Prevent triggering click if the user dragged away
+        const isAbort = e.type === 'mouseleave' || e.type === 'touchcancel';
+        if (!isAbort && onClick) {
+          onClick(e);
+        }
+      }
+      
+      // Use a small timeout to reset isLongPress to prevent ghost clicks
+      setTimeout(() => setIsLongPress(false), 10);
+    };
+
+    return {
+      onMouseDown: start,
+      onMouseUp: stop,
+      onMouseLeave: stop,
+      onTouchStart: start,
+      onTouchEnd: stop,
+      onTouchCancel: stop
+    };
+  };
+
   const DropButton = ({ playerId }) => {
+    const longPressProps = useLongPress(
+      () => handleDrop(playerId, true),
+      () => handleDrop(playerId, false)
+    );
+
     return (
       <button 
         className="drop-btn"
-        onClick={() => handleDrop(playerId)}
+        {...longPressProps}
       >
         DROP
       </button>
