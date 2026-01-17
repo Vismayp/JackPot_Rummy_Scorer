@@ -1,7 +1,64 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useGame } from '../context/GameContext';
-import { validateRoundScores, getDropPenalty, MAX_ROUND_SCORE } from '../utils/gameLogic';
+import { validateRoundScores, MAX_ROUND_SCORE } from '../utils/gameLogic';
 import './RoundInput.css';
+
+// Custom hook for handling long press and clicks on both desktop and mobile
+const useLongPress = (onLongPress, onClick, { delay = 500 } = {}) => {
+  const timerRef = useRef(null);
+  const isLongPressRef = useRef(false);
+
+  const start = useCallback((e) => {
+    isLongPressRef.current = false;
+    if (timerRef.current) clearTimeout(timerRef.current);
+    
+    timerRef.current = setTimeout(() => {
+      isLongPressRef.current = true;
+      onLongPress(e);
+      if (window.navigator && window.navigator.vibrate) {
+        window.navigator.vibrate(50);
+      }
+    }, delay);
+  }, [onLongPress, delay]);
+
+  const stop = useCallback((e) => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    
+    if (!isLongPressRef.current) {
+      const isAbort = e.type === 'mouseleave' || e.type === 'touchcancel';
+      if (!isAbort && onClick) {
+        onClick(e);
+      }
+    }
+    
+    // Prevent ghost clicks and default browser behavior on mobile
+    if (e.type === 'touchend' && e.cancelable) {
+      e.preventDefault();
+    }
+  }, [onClick]);
+
+  const move = useCallback(() => {
+    // Cancel long press if user moves finger (e.g. while scrolling)
+    if (timerRef.current && !isLongPressRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
+  return {
+    onMouseDown: start,
+    onMouseUp: stop,
+    onMouseLeave: stop,
+    onTouchStart: start,
+    onTouchEnd: stop,
+    onTouchMove: move,
+    onTouchCancel: stop,
+    onContextMenu: (e) => e.preventDefault(),
+  };
+};
 
 export default function RoundInput() {
   const { state, dispatch } = useGame();
@@ -57,59 +114,6 @@ export default function RoundInput() {
     setErrors([]);
   };
 
-  const useLongPress = (onLongPress, onClick, { delay = 500 } = {}) => {
-    const [timer, setTimer] = useState(null);
-    const [isLongPress, setIsLongPress] = useState(false);
-
-    const start = (e) => {
-      // Prevent context menu on touch devices
-      if (e.type === 'touchstart') {
-        // We don't preventDefault here anymore to allow clicking the clear button,
-        // but we need to be careful with the long press logic.
-      }
-      e.persist();
-      setIsLongPress(false);
-      const timeout = setTimeout(() => {
-        setIsLongPress(true);
-        onLongPress(e);
-        // Provide haptic feedback if available
-        if (window.navigator && window.navigator.vibrate) {
-          window.navigator.vibrate(50);
-        }
-      }, delay);
-      setTimer(timeout);
-    };
-
-    const stop = (e) => {
-      if (timer) {
-        clearTimeout(timer);
-        setTimer(null);
-      }
-      
-      // If it was a long press, we've already triggered onLongPress
-      // If it wasn't, and it's a valid click/tap, trigger onClick
-      if (!isLongPress) {
-        // Prevent triggering click if the user dragged away
-        const isAbort = e.type === 'mouseleave' || e.type === 'touchcancel';
-        if (!isAbort && onClick) {
-          onClick(e);
-        }
-      }
-      
-      // Use a small timeout to reset isLongPress to prevent ghost clicks
-      setTimeout(() => setIsLongPress(false), 10);
-    };
-
-    return {
-      onMouseDown: start,
-      onMouseUp: stop,
-      onMouseLeave: stop,
-      onTouchStart: start,
-      onTouchEnd: stop,
-      onTouchCancel: stop
-    };
-  };
-
   const DropButton = ({ playerId }) => {
     const longPressProps = useLongPress(
       () => handleDrop(playerId, true),
@@ -118,6 +122,7 @@ export default function RoundInput() {
 
     return (
       <button 
+        type="button"
         className="drop-btn"
         {...longPressProps}
       >
