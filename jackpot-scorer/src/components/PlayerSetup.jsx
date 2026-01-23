@@ -8,6 +8,7 @@ export default function PlayerSetup() {
   const [playerName, setPlayerName] = useState('');
   const [error, setError] = useState('');
   const [history, setHistory] = useState([]);
+  const [isSecretSeven, setIsSecretSeven] = useState(false);
 
   useEffect(() => {
     setHistory(getGameHistory());
@@ -41,7 +42,10 @@ export default function PlayerSetup() {
       setError('> ERROR: Need at least 2 players');
       return;
     }
-    dispatch({ type: 'START_GAME' });
+    dispatch({ 
+      type: 'START_GAME',
+      payload: { gameMode: isSecretSeven ? 'secret_seven' : 'standard' }
+    });
   };
 
   const handleResumeGame = (game) => {
@@ -99,9 +103,20 @@ export default function PlayerSetup() {
             <span className="blink">_</span> waiting for players...
           </div>
         )}
-      </div>
-      
-      {state.players.length >= 2 && (
+      </ddiv className="start-controls">
+          <label className="mode-toggle" style={{ display: 'block', marginBottom: '10px', cursor: 'pointer', fontFamily: 'monospace' }}>
+            <input 
+              type="checkbox" 
+              checked={isSecretSeven} 
+              onChange={(e) => setIsSecretSeven(e.target.checked)}
+              style={{ marginRight: '8px' }}
+            />
+            <span className={isSecretSeven ? 'accent' : ''}>[MODE: SECRET_SEVEN]</span>
+          </label>
+          <button onClick={handleStartGame} className="start-btn">
+            <span className="prompt">$</span> START_GAME
+          </button>
+        </divyers.length >= 2 && (
         <button onClick={handleStartGame} className="start-btn">
           <span className="prompt">$</span> START_GAME
         </button>

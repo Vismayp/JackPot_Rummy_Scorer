@@ -16,6 +16,7 @@ const initialState = {
   gameStarted: false,
   currentRound: 1,
   theme: "dark",
+  gameMode: "standard", // 'standard' or 'secret_seven'
 };
 
 function gameReducer(state, action) {
@@ -52,6 +53,7 @@ function gameReducer(state, action) {
         ...state,
         gameStarted: true,
         gameId: Date.now().toString(),
+        gameMode: action.payload?.gameMode || "standard",
       };
     }
 
@@ -63,7 +65,8 @@ function gameReducer(state, action) {
     }
 
     case "SUBMIT_ROUND": {
-      const { scores } = action.payload;
+      const isSecretSeven = state.gameMode === "secret_seven";
+
       const newPlayers = state.players.map((player) => {
         const scoreData = scores[player.id];
         if (!scoreData || player.status === "eliminated") {
@@ -78,9 +81,22 @@ function gameReducer(state, action) {
           newTotal += penalty;
           newDropCount = player.dropCount + 1;
         } else {
-          newTotal += scoreData.score;
+          let roundScore = scoreData.score;
+          // In Secret Seven, rounds 1 and 7 scores are doubled
+          if (
+            isSecretSeven &&
+            (state.currentRound === 1 || state.currentRound === 7)
+          ) {
+            roundScore *= 2;
+          }
+          newTotal += roundScore;
         }
 
+        // Only eliminate in standard mode
+        let newStatus = player.status;
+        if (!isSecretSeven) {
+          newStatus = shouldEliminate(newTotal) ? "eliminated" : "active";
+        }
         const newStatus = shouldEliminate(newTotal) ? "eliminated" : "active";
 
         return {

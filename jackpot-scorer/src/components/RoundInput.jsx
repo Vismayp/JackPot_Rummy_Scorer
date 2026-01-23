@@ -1,44 +1,50 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { useGame } from '../context/GameContext';
-import { validateRoundScores, MAX_ROUND_SCORE } from '../utils/gameLogic';
-import './RoundInput.css';
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useGame } from "../context/GameContext";
+import { validateRoundScores, MAX_ROUND_SCORE } from "../utils/gameLogic";
+import "./RoundInput.css";
 
 // Custom hook for handling long press and clicks on both desktop and mobile
 const useLongPress = (onLongPress, onClick, { delay = 500 } = {}) => {
   const timerRef = useRef(null);
   const isLongPressRef = useRef(false);
 
-  const start = useCallback((e) => {
-    isLongPressRef.current = false;
-    if (timerRef.current) clearTimeout(timerRef.current);
-    
-    timerRef.current = setTimeout(() => {
-      isLongPressRef.current = true;
-      onLongPress(e);
-      if (window.navigator && window.navigator.vibrate) {
-        window.navigator.vibrate(50);
-      }
-    }, delay);
-  }, [onLongPress, delay]);
+  const start = useCallback(
+    (e) => {
+      isLongPressRef.current = false;
+      if (timerRef.current) clearTimeout(timerRef.current);
 
-  const stop = useCallback((e) => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
-    
-    if (!isLongPressRef.current) {
-      const isAbort = e.type === 'mouseleave' || e.type === 'touchcancel';
-      if (!isAbort && onClick) {
-        onClick(e);
+      timerRef.current = setTimeout(() => {
+        isLongPressRef.current = true;
+        onLongPress(e);
+        if (window.navigator && window.navigator.vibrate) {
+          window.navigator.vibrate(50);
+        }
+      }, delay);
+    },
+    [onLongPress, delay],
+  );
+
+  const stop = useCallback(
+    (e) => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
       }
-    }
-    
-    // Prevent ghost clicks and default browser behavior on mobile
-    if (e.type === 'touchend' && e.cancelable) {
-      e.preventDefault();
-    }
-  }, [onClick]);
+
+      if (!isLongPressRef.current) {
+        const isAbort = e.type === "mouseleave" || e.type === "touchcancel";
+        if (!isAbort && onClick) {
+          onClick(e);
+        }
+      }
+
+      // Prevent ghost clicks and default browser behavior on mobile
+      if (e.type === "touchend" && e.cancelable) {
+        e.preventDefault();
+      }
+    },
+    [onClick],
+  );
 
   const move = useCallback(() => {
     // Cancel long press if user moves finger (e.g. while scrolling)
@@ -66,14 +72,14 @@ export default function RoundInput() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [errors, setErrors] = useState([]);
 
-  const activePlayers = state.players.filter(p => p.status === 'active');
-  const activePlayerIds = activePlayers.map(p => p.id).join(',');
+  const activePlayers = state.players.filter((p) => p.status === "active");
+  const activePlayerIds = activePlayers.map((p) => p.id).join(",");
 
   // Initialize scores when active players change
   useEffect(() => {
     const initial = {};
-    activePlayers.forEach(player => {
-      initial[player.id] = { score: '', isDrop: false, dropLevel: 0 };
+    activePlayers.forEach((player) => {
+      initial[player.id] = { score: "", isDrop: false, dropLevel: 0 };
     });
     setScores(initial);
     setErrors([]);
@@ -81,35 +87,43 @@ export default function RoundInput() {
 
   const initializeScores = () => {
     const initial = {};
-    activePlayers.forEach(player => {
-      initial[player.id] = { score: '', isDrop: false, dropLevel: 0 };
+    activePlayers.forEach((player) => {
+      initial[player.id] = { score: "", isDrop: false, dropLevel: 0 };
     });
     setScores(initial);
     setErrors([]);
   };
 
   const handleScoreChange = (playerId, value) => {
-    const numValue = value === '' ? '' : Math.max(0, Math.min(MAX_ROUND_SCORE, parseInt(value) || 0));
-    setScores(prev => ({
+    const numValue =
+      value === ""
+        ? ""
+        : Math.max(0, Math.min(MAX_ROUND_SCORE, parseInt(value) || 0));
+    setScores((prev) => ({
       ...prev,
-      [playerId]: { ...prev[playerId], score: numValue, isDrop: false, dropLevel: 0 }
+      [playerId]: {
+        ...prev[playerId],
+        score: numValue,
+        isDrop: false,
+        dropLevel: 0,
+      },
     }));
     setErrors([]);
   };
 
   const handleDrop = (playerId, isSecond = false) => {
-    const player = state.players.find(p => p.id === playerId);
+    const player = state.players.find((p) => p.id === playerId);
     if (!player) return;
-    
+
     const penalty = isSecond ? 40 : 25;
-    
-    setScores(prev => ({
+
+    setScores((prev) => ({
       ...prev,
-      [playerId]: { 
-        score: penalty, 
-        isDrop: true, 
-        dropLevel: isSecond ? 2 : 1
-      }
+      [playerId]: {
+        score: penalty,
+        isDrop: true,
+        dropLevel: isSecond ? 2 : 1,
+      },
     }));
     setErrors([]);
   };
@@ -117,62 +131,64 @@ export default function RoundInput() {
   const DropButton = ({ playerId }) => {
     const longPressProps = useLongPress(
       () => handleDrop(playerId, true),
-      () => handleDrop(playerId, false)
+      () => handleDrop(playerId, false),
     );
 
     return (
-      <button 
-        type="button"
-        className="drop-btn"
-        {...longPressProps}
-      >
+      <button type="button" className="drop-btn" {...longPressProps}>
         DROP
       </button>
     );
   };
 
   const handleClearDrop = (playerId) => {
-    setScores(prev => ({
+    setScores((prev) => ({
       ...prev,
-      [playerId]: { score: '', isDrop: false, dropLevel: 0 }
+      [playerId]: { score: "", isDrop: false, dropLevel: 0 },
     }));
   };
 
   const handleSubmit = () => {
     // Validate all players have scores
-    const playersWithScores = activePlayers.filter(p => {
+    const playersWithScores = activePlayers.filter((p) => {
       const score = scores[p.id];
-      return score && (score.score !== '' || score.isDrop);
+      return score && (score.score !== "" || score.isDrop);
     });
 
     if (playersWithScores.length === 0) {
-      setErrors(['At least one player must have a score or drop']);
+      setErrors(["At least one player must have a score or drop"]);
       return;
     }
 
     // Automatically assign 0 to the remaining player if only one is left
     let finalScores = { ...scores };
-    const missingScores = activePlayers.filter(p => {
+    const missingScores = activePlayers.filter((p) => {
       const score = scores[p.id];
-      return !score || (score.score === '' && !score.isDrop);
+      return !score || (score.score === "" && !score.isDrop);
     });
 
     if (missingScores.length === 1) {
       const remainingPlayer = missingScores[0];
-      finalScores[remainingPlayer.id] = { score: 0, isDrop: false, dropLevel: 0 };
+      finalScores[remainingPlayer.id] = {
+        score: 0,
+        isDrop: false,
+        dropLevel: 0,
+      };
     } else if (missingScores.length > 1) {
-      setErrors(['All players except one must have a score or drop']);
+      setErrors(["All players except one must have a score or drop"]);
       return;
     }
 
     // Prepare scores for validation
     const preparedScores = {};
-    activePlayers.forEach(player => {
+    activePlayers.forEach((player) => {
       const scoreData = finalScores[player.id];
       preparedScores[player.id] = {
-        score: scoreData.isDrop ? scoreData.score : (parseInt(scoreData.score) || 0),
+        score: scoreData.isDrop
+          ? scoreData.score
+          : parseInt(scoreData.score) || 0,
         isDrop: scoreData.isDrop,
-        dropLevel: scoreData.dropLevel
+        dropLevel: scoreData.dropLevel,
       };
     });
 
@@ -188,16 +204,18 @@ export default function RoundInput() {
 
   const confirmSubmit = () => {
     const preparedScores = {};
-    activePlayers.forEach(player => {
+    activePlayers.forEach((player) => {
       const scoreData = scores[player.id];
       preparedScores[player.id] = {
-        score: scoreData.isDrop ? scoreData.score : (parseInt(scoreData.score) || 0),
+        score: scoreData.isDrop
+          ? scoreData.score
+          : parseInt(scoreData.score) || 0,
         isDrop: scoreData.isDrop,
-        dropLevel: scoreData.dropLevel
+        dropLevel: scoreData.dropLevel,
       };
     });
 
-    dispatch({ type: 'SUBMIT_ROUND', payload: { scores: preparedScores } });
+    dispatch({ type: "SUBMIT_ROUND", payload: { scores: preparedScores } });
     setShowConfirm(false);
     initializeScores();
   };
@@ -206,12 +224,20 @@ export default function RoundInput() {
     setShowConfirm(false);
   };
 
-  if (activePlayers.length < 2) {
+  const isSecretSeven = state.gameMode === "secret_seven";
+  const isGameFinished =
+    activePlayers.length < 2 || (isSecretSeven && state.currentRound > 7);
+
+  if (isGameFinished) {
     return (
       <div className="round-input">
         <div className="no-players">
           <span className="accent">[GAME OVER]</span>
-          <p>Not enough active players to continue.</p>
+          <p>
+            {isSecretSeven && state.currentRound > 7
+              ? "Secret Seven sequence complete."
+              : "Not enough active players to continue."}
+          </p>
         </div>
       </div>
     );
@@ -221,18 +247,23 @@ export default function RoundInput() {
     <div className="round-input">
       <div className="round-header">
         <span className="section-label">[ROUND {state.currentRound}]</span>
-        <span className="hint">Enter scores (0-{MAX_ROUND_SCORE})</span>
+        <span className="hint">
+          {isSecretSeven &&
+          (state.currentRound === 1 || state.currentRound === 7)
+            ? "DOUBLE POINTS ACTIVE"
+            : `Enter scores (0-${MAX_ROUND_SCORE})`}
+        </span>
       </div>
 
       <div className="score-inputs">
-        {activePlayers.map(player => {
-          const scoreData = scores[player.id] || { score: '', isDrop: false };
-          const isWinner = scoreData.score === 0 || scoreData.score === '0';
-          
+        {activePlayers.map((player) => {
+          const scoreData = scores[player.id] || { score: "", isDrop: false };
+          const isWinner = scoreData.score === 0 || scoreData.score === "0";
+
           return (
-            <div 
-              key={player.id} 
-              className={`score-row ${isWinner ? 'winner' : ''} ${scoreData.isDrop ? 'dropped' : ''}`}
+            <div
+              key={player.id}
+              className={`score-row ${isWinner ? "winner" : ""} ${scoreData.isDrop ? "dropped" : ""}`}
             >
               <div className="score-player">
                 <span className="player-name">{player.name}</span>
@@ -240,14 +271,14 @@ export default function RoundInput() {
                   ({player.totalScore} | D:{player.dropCount})
                 </span>
               </div>
-              
+
               <div className="score-controls">
                 {scoreData.isDrop ? (
                   <div className="drop-indicator">
                     <span className="drop-value">
-                      +{scoreData.score}↓{scoreData.dropLevel === 2 ? '↓' : ''}
+                      +{scoreData.score}↓{scoreData.dropLevel === 2 ? "↓" : ""}
                     </span>
-                    <button 
+                    <button
                       className="clear-drop-btn"
                       onClick={() => handleClearDrop(player.id)}
                     >
@@ -261,15 +292,17 @@ export default function RoundInput() {
                       min="0"
                       max={MAX_ROUND_SCORE}
                       value={scoreData.score}
-                      onChange={(e) => handleScoreChange(player.id, e.target.value)}
-                      className={`score-input ${isWinner ? 'winner-input' : ''}`}
+                      onChange={(e) =>
+                        handleScoreChange(player.id, e.target.value)
+                      }
+                      className={`score-input ${isWinner ? "winner-input" : ""}`}
                       placeholder="--"
                     />
-                    <DropButton playerId={player.id} />
+                    {!isSecretSeven && <DropButton playerId={player.id} />}
                   </>
                 )}
               </div>
-              
+
               {isWinner && <span className="winner-badge">0*</span>}
             </div>
           );
@@ -279,7 +312,9 @@ export default function RoundInput() {
       {errors.length > 0 && (
         <div className="errors">
           {errors.map((error, i) => (
-            <div key={i} className="error-line">&gt; ERROR: {error}</div>
+            <div key={i} className="error-line">
+              &gt; ERROR: {error}
+            </div>
           ))}
         </div>
       )}
@@ -291,20 +326,21 @@ export default function RoundInput() {
       {showConfirm && (
         <div className="confirm-overlay">
           <div className="confirm-modal">
-            <div className="confirm-title">[CONFIRM ROUND {state.currentRound}]</div>
+            <div className="confirm-title">
+              [CONFIRM ROUND {state.currentRound}]
+            </div>
             <div className="confirm-scores">
-              {activePlayers.map(player => {
+              {activePlayers.map((player) => {
                 const scoreData = scores[player.id];
                 return (
                   <div key={player.id} className="confirm-row">
                     <span>{player.name}</span>
                     <span className="confirm-value">
-                      {scoreData.isDrop 
-                        ? `+${scoreData.score}↓${scoreData.dropLevel === 2 ? '↓' : ''}`
-                        : scoreData.score === 0 || scoreData.score === '0'
-                          ? '0*'
-                          : `+${scoreData.score}`
-                      }
+                      {scoreData.isDrop
+                        ? `+${scoreData.score}↓${scoreData.dropLevel === 2 ? "↓" : ""}`
+                        : scoreData.score === 0 || scoreData.score === "0"
+                          ? "0*"
+                          : `+${scoreData.score}`}
                     </span>
                   </div>
                 );
