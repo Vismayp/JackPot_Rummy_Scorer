@@ -65,6 +65,7 @@ function gameReducer(state, action) {
     }
 
     case "SUBMIT_ROUND": {
+      const { scores } = action.payload;
       const isSecretSeven = state.gameMode === "secret_seven";
 
       const newPlayers = state.players.map((player) => {

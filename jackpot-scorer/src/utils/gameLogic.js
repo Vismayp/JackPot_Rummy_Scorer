@@ -46,7 +46,11 @@ export const getHighestActiveScore = (players) => {
 };
 
 // Validate round scores
-export const validateRoundScores = (scores, activePlayers) => {
+export const validateRoundScores = (
+  scores,
+  activePlayers,
+  gameMode = "standard",
+) => {
   const errors = [];
   const scoreValues = Object.values(scores);
 
@@ -70,7 +74,7 @@ export const validateRoundScores = (scores, activePlayers) => {
       errors.push(`${player.name}: Score cannot be negative`);
     }
 
-    if (scoreData.score > MAX_ROUND_SCORE) {
+    if (gameMode !== "secret_seven" && scoreData.score > MAX_ROUND_SCORE) {
       errors.push(`${player.name}: Score cannot exceed ${MAX_ROUND_SCORE}`);
     }
   }

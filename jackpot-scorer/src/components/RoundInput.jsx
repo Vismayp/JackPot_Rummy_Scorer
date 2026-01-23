@@ -95,10 +95,16 @@ export default function RoundInput() {
   };
 
   const handleScoreChange = (playerId, value) => {
+    const isSecretSeven = state.gameMode === "secret_seven";
     const numValue =
       value === ""
         ? ""
-        : Math.max(0, Math.min(MAX_ROUND_SCORE, parseInt(value) || 0));
+        : Math.max(
+            0,
+            isSecretSeven
+              ? parseInt(value) || 0
+              : Math.min(MAX_ROUND_SCORE, parseInt(value) || 0),
+          );
     setScores((prev) => ({
       ...prev,
       [playerId]: {
@@ -192,7 +198,11 @@ export default function RoundInput() {
       };
     });
 
-    const validationErrors = validateRoundScores(preparedScores, activePlayers);
+    const validationErrors = validateRoundScores(
+      preparedScores,
+      activePlayers,
+      state.gameMode,
+    );
     if (validationErrors.length > 0) {
       setErrors(validationErrors);
       return;
@@ -290,7 +300,7 @@ export default function RoundInput() {
                     <input
                       type="number"
                       min="0"
-                      max={MAX_ROUND_SCORE}
+                      {...(!isSecretSeven && { max: MAX_ROUND_SCORE })}
                       value={scoreData.score}
                       onChange={(e) =>
                         handleScoreChange(player.id, e.target.value)
