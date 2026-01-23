@@ -97,7 +97,6 @@ function gameReducer(state, action) {
         if (!isSecretSeven) {
           newStatus = shouldEliminate(newTotal) ? "eliminated" : "active";
         }
-        const newStatus = shouldEliminate(newTotal) ? "eliminated" : "active";
 
         return {
           ...player,
